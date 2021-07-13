@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>done</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+</head>
+
+<body>
+    <article>
+        <div class="sidebar">
+            TaskTimeApp
+            <a th:href="@{/app/top}"><button>TOPへ</button></a><br>
+            <a th:href="@{/app/today}"><button>today表示</button></a><br>
+            <a th:href="@{/app/done}"><button>done表示</button></a><br>
+        </div>
+
+        <div class="content">
+
+            完了済みタスク一覧
+            <table border=1>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>見積時間</th>
+                        <th>累計実行時間</th>
+                        <th>完了or未完了</th>
+                        <th>完了日</th>
+                        <th>未完了に戻す</th>
+                        <th>完全に削除</th>
+                    </tr>
+                </thead>
+
+                <tbody th:each="task:${task}" th:object="${task}">
+                    <tr>
+                        <td th:text="*{taskName}"></td>
+                        <td th:text="*{estimatedTime}"></td>
+                        <td th:text="*{accumlatedTime}"></td>
+                        <td th:text="*{done}"></td>
+                        <td th:text="*{completionDate}"></td>
+                        <td>
+                            <form method="POST" th:action="@{/app/undone/{taskID} (taskID=*{taskID}) }">
+                                <button>Undone</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" th:action="@{/app/delete/{taskID} (taskID=*{taskID}) }">
+                                <button>Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </article>
+
+
+</body>
+
+</html>

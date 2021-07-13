@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>today</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+</head>
+
+<body>
+    <article>
+        <div class="sidebar">
+            TaskTimeApp
+            <a th:href="@{/app/top}"><button>TOPへ</button></a><br>
+            <a th:href="@{/app/today}"><button>today表示</button></a><br>
+            <a th:href="@{/app/done}"><button>done表示</button></a><br>
+        </div>
+
+        <div class="content">
+
+            <!-- タイマー表示 -->
+            <p>
+                <input type="button" value="カウント開始" id="startcount" onclick="start();">
+                <input type="button" value="カウント停止" id="stopcount" onclick="stop();">
+            </p>
+            <p id="taskname"></p>(taskname表示)<br>
+            <p id="elapsedtime">(カウント表示)</p>
+            
+
+
+            今日のタスク
+            <table border=1>
+                <thead>
+                    <tr>
+                        <!-- <th></th> -->
+                        <th>1.Task</th>
+                        <th>2.見積時間</th>
+                        <th>3.予定日</th>
+                        <th>4.開始時刻</th>
+                        <th>5.完了ボタン</th>
+                        <th>6.編集ボタン</th>
+                        <th>7.累計実行時間</th>
+                        <th>8.完了or未完了</th>
+                        <th>9.優先度</th>
+                    </tr>
+                </thead>
+
+                <tbody th:each="task:${task}" th:object="${task}">
+                    <tr>
+                        <!-- <td><input type="button" value="▶" onclick="start();"></td> -->
+                        <td th:text="*{taskName}"></td>
+                        <td th:text="*{estimatedTime}">2</td>
+                        <td th:text="*{scheduledDate}">3</td>
+                        <td th:text="*{startTime}">4</td>
+                        <td>
+                            <form method="POST" th:action="@{/app/done/{taskID} (taskID=*{taskID}) }">
+                                <button>完了</button></form>
+                        </td>
+                        <td><a th:href="@{/app/edit/{taskID} (taskID=*{taskID}) }"><button>編集</button></a></td>
+                        <td th:text="*{accumlatedTime}"></td>
+                        <td th:text="*{done}">8</td>
+                        <td th:text="*{priority}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+
+
+    <!-- JavaScript -->
+    <script th:inline="javascript">
+        let PassedTime = 0;
+
+        function format(time) {
+            let sec = (time % 60) % 60;
+            let min = Math.floor(time / 60) % 60;
+            let hour = Math.floor(time / 3600);
+
+            return hour + ':' + min + ':' + sec;
+        }
+        
+
+        function start() {
+
+            intervalID = setInterval('count();', 1000);
+
+
+            //startボタン無効化
+            document.getElementById("startcount").disabled = true;
+        }
+
+        function count() {
+            PassedTime++;
+            let msg = format(PassedTime);
+            document.getElementById("elapsedtime").innerHTML = msg;
+        }
+
+        function stop() {
+            //intervalを停止
+            clearInterval(intervalID);
+
+            //startボタン有効化
+            document.getElementById("startcount").disabled = false;
+        }
+
+    </script>
+
+
+</body>
+
+</html>

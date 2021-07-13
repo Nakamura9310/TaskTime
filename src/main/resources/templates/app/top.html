@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+	<meta charset="UTF-8">
+	<title>top</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+
+
+
+</head>
+
+<body>
+
+	<article>
+		<!-- サイドバー -->
+		<div class="sidebar">
+			TaskTimeApp
+			<a th:href="@{/app/top}"><button>TOPへ</button></a><br>
+			<a th:href="@{/app/today}"><button>today表示</button></a><br>
+			<a th:href="@{/app/done}"><button>done表示</button></a><br>
+			<!-- ログアウトボタン -->
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Logout" />
+			</form>
+		</div>
+		<!-- サイドバーここまで -->
+
+		<div class="content">
+			<form th:action="@{/app/test}" method="post">
+				<input type="submit" value="test" />
+			</form>
+
+			<p style="text-align:center">
+				<a th:href="@{/app/new}"><button>+ NewTask</button></a>
+			</p>
+
+			<h3>タスク一覧</h3>
+			<div class="task-table">
+				<table border=1>
+					<thead class="task-table-header">
+						<tr>
+							<th>1.Task</th>
+							<th>2.見積時間(h)</th>
+							<th>3.予定日</th>
+							<th>4.開始時刻</th>
+							<th>5.完了ボタン</th>
+							<th>6.編集ボタン</th>
+							<th>7.累計実行時間</th>
+							<th>8.完了or未完了</th>
+							<th>9.完了日</th>
+							<th>10優先度
+								<form method="POST" th:action="@{/app/top/priority}"><button>ソート</button></form>
+							</th>
+						</tr>
+					</thead>
+
+					<tbody th:each="task:${task}" th:object="${task}">
+						<tr>
+							<td th:text="*{taskName}">1</td>
+							<td th:text="*{estimatedTime}">2</td>
+							<td th:text="*{scheduledDate}">3</td>
+							<td th:text="*{startTime}">4</td>
+							<td>
+								<form method="POST" th:action="@{/app/done/{taskID} (taskID=*{taskID}) }">
+									<button>done</button>
+								</form>
+							</td>
+							<td><a th:href="@{/app/edit/{taskID} (taskID=*{taskID}) }"><button>編集</button></a></td>
+							<td th:text="*{accumlatedTime}">7</td>
+							<td th:text="*{done}">8</td>
+							<td th:text="*{completionDate}"></td>
+							<td th:text="*{priority}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h3>今週のタスク状況</h3>
+			<br>
+			<table border=1>
+				<thead>
+					<th></th>
+					<th>月</th>
+					<th>火</th>
+					<th>水</th>
+					<th>木</th>
+					<th>金</th>
+					<th>土</th>
+					<th>日</th>
+				</thead>
+				<tbody>
+					<td></td>
+					<td th:text="${mon}"></td>
+					<td th:text="${tue}"></td>
+					<td th:text="${wed}"></td>
+					<td th:text="${thu}"></td>
+					<td th:text="${fri}"></td>
+					<td th:text="${sat}"></td>
+					<td th:text="${sun}"></td>
+				</tbody>
+				<!-- <tbody>
+					<td></td>
+					<td><span id="sun"></span></td>
+					<td><span id="mon"></span></td>
+					<td><span id="tue"></span></td>
+					<td><span id="wed"></span></td>
+					<td><span id="thu"></span></td>
+					<td><span id="fri"></span></td>
+					<td><span id="sat"></span></td>
+				</tbody> -->
+				<tbody>
+					<td>見積時間(h)</td>
+					<td th:text="${monEstimatedTime}"></td>
+					<td th:text="${tueEstimatedTime}"></td>
+					<td th:text="${wedEstimatedTime}"></td>
+					<td th:text="${thuEstimatedTime}"></td>
+					<td th:text="${friEstimatedTime}"></td>
+					<td th:text="${satEstimatedTime}"></td>
+					<td th:text="${sunEstimatedTime}"></td>
+				</tbody>
+			</table>
+
+			sec:authorize="isAuthenticated()"
+			<p sec:authorize="isAuthenticated()"></p><br>
+
+			sec:authentication="name"
+			<p sec:authentication="name"></p><br>
+
+			sec:authentication="principal.attributes['name']"
+			<p sec:authentication="principal.attributes['name']"></p><br>
+
+			<!-- th:text="${authorizedClient.clientRegistration.clientName}"
+			<p th:text="${authorizedClient.clientRegistration.clientName}"></p><br> -->
+
+			<!-- ユーザ属性の一覧 -->
+			<ul>
+				<li th:each="attribute : ${attributes}">
+					<span style="font-weight:bold" th:text="${attribute.key}"></span>:
+					<span
+						th:text="${attribute.value}"></span>
+				</li>
+			</ul>
+			<p th:text="${email}"></p>
+		</div>
+	</article>
+
+	<!-- JavaScriptのライブラリdayjs使用（CDN） -->
+	<!-- <script src="https://unpkg.com/dayjs"></script>
+	<script>
+		dayjs.locale('ja');
+		
+		const today = dayjs();
+		const fmt = 'MM-DD'
+		
+		//dayjsを用いて週の先頭日付を取得し、１日ずつ足して今週の毎日の日付取得
+		const sun = today.startOf('week').format(fmt);
+		const mon = today.startOf('week').add(1, 'd').format(fmt);
+		const tue = today.startOf('week').add(2, 'd').format(fmt);
+		const wed = today.startOf('week').add(3, 'd').format(fmt);
+		const thu = today.startOf('week').add(4, 'd').format(fmt);
+		const fri = today.startOf('week').add(5, 'd').format(fmt);
+		const sat = today.startOf('week').add(6, 'd').format(fmt);
+		
+		//htmlへid属性の値として渡す
+		document.getElementById('sun').textContent = sun;
+		document.getElementById('mon').textContent = mon;
+		document.getElementById('tue').textContent = tue;
+		document.getElementById('wed').textContent = wed;
+		document.getElementById('thu').textContent = thu;
+		document.getElementById('fri').textContent = fri;
+		document.getElementById('sat').textContent = sat; -->
+
+
+
+	</script>
+
+
+</body>
+
+</html>

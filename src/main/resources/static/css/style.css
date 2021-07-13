@@ -1,0 +1,25 @@
+article {
+    display: flex;
+}
+
+.sidebar {
+    background-color:lightblue;
+    width: 10vw;
+    text-align: center;
+}
+
+.content {
+    margin-left: 10px;
+}
+
+.task-table {
+    overflow-y:scroll;
+    height: 30vw;
+}
+
+.task-table-header {
+    position: sticky;
+    top: 0;
+    background-color: blanchedalmond;
+}
+
