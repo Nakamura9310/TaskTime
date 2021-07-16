@@ -70,10 +70,11 @@ public class TaskTimeController {
 	//topページ表示
 	@GetMapping("/top")
 	public String displayTop(@AuthenticationPrincipal OAuth2User oauth2User, OAuth2AuthenticationToken authentication, Model model) {
-
+		
+		
 		model.addAttribute("authorizedClient", this.getAuthorizedClient(authentication));
 		model.addAttribute("attributes", oauth2User.getAttributes());
-		model.addAttribute("email", oauth2User.getAttributes().get("email"));
+		model.addAttribute("email", oauth2User.getAttribute("email"));
 
 		List<Task> task = taskService.selectUndoneTasks();
 		
@@ -132,11 +133,33 @@ public class TaskTimeController {
 	public String sortByPriority(Model model) {
 		List<Task> task = taskService.selectUndoneTasksByPriority();
 		model.addAttribute("task", task);
-		
+
 		//週間タスク表示ロジックを記載すること
 
+		return "/app/top";
+	}
+	
+
+
+
+
+
+	//GoogleCalendarAPI イベント追加test
+	@PostMapping("/test")
+	public String test(OAuth2AuthenticationToken authenticationToken) throws GeneralSecurityException, IOException {
+		gcapi.addEventTest(authenticationToken);
 		return "redirect:/app/top";
 	}
+
+
+
+
+
+
+
+
+
+
 	
 	//新規タスク登録
 	@GetMapping("/new")
@@ -200,12 +223,6 @@ public class TaskTimeController {
 		return "/app/done";
 	}
 	
-	//GoogleCalendarAPI イベント追加test
-	@PostMapping("/test")
-	public String test(@AuthenticationPrincipal OAuth2User oauth2User, OAuth2AuthenticationToken authentication) throws GeneralSecurityException, IOException {
-		gcapi.addEvent(oauth2User, authentication);
-		return "redirect:/app/top";
-	}
 	
 	
 

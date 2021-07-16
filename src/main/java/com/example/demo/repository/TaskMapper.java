@@ -28,11 +28,11 @@ public interface TaskMapper {
 
     //select　優先度順
     @Select("SELECT * FROM Task WHERE done = false ORDER BY " +
-    "CASE " +
-        "WHEN priority IS NULL THEN'2' " +//null最後
-        "WHEN priority = '' THEN '1' " +//空文字最後
-        "ELSE '0' " +
-    "END, priority, scheduledDate ASC")
+        "CASE " +
+            "WHEN priority IS NULL THEN '2' " +//null最後
+            "WHEN priority = '' THEN '1' " +//空文字最後
+            "ELSE '0' " +
+        "END, priority, scheduledDate ASC")
     public List<Task> selectUndoneTasksByPriority();
 
     //select doneのみ

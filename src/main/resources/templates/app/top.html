@@ -76,7 +76,7 @@
 				</table>
 			</div>
 
-			<h3>今週のタスク状況</h3>
+			今週のタスク状況
 			<br>
 			<table border=1>
 				<thead>
@@ -121,7 +121,40 @@
 				</tbody>
 			</table>
 
-			sec:authorize="isAuthenticated()"
+
+
+
+
+			<iframe 
+				th:src="|https://calendar.google.com/calendar/
+				embed?
+
+				src=${email}
+				
+				&ctz=Asia%2FTokyo&amp;
+
+				height=600&amp;
+				wkst=2&amp;
+				bgcolor=%23ffffff&amp;
+				width=800&amp;
+				height=600&amp;
+				frameborder=0&amp;
+				scrolling=no&amp;
+				mode=WEEK&amp;
+				showTitle=0&amp;
+				showCalendars=0&amp;
+				showTabs=0&amp;
+				showPrint=0&amp;
+				showDate=0&amp;|"
+				style="border:solid 1px #777" 
+				width="800" 
+				height="500" 
+				frameborder="0" 
+			>
+			</iframe>
+
+
+			<!-- sec:authorize="isAuthenticated()"
 			<p sec:authorize="isAuthenticated()"></p><br>
 
 			sec:authentication="name"
@@ -130,18 +163,18 @@
 			sec:authentication="principal.attributes['name']"
 			<p sec:authentication="principal.attributes['name']"></p><br>
 
-			<!-- th:text="${authorizedClient.clientRegistration.clientName}"
+			th:text="${authorizedClient.clientRegistration.clientName}"
 			<p th:text="${authorizedClient.clientRegistration.clientName}"></p><br> -->
 
 			<!-- ユーザ属性の一覧 -->
-			<ul>
+			<!-- <ul>OAuth2Userのattribute一覧
 				<li th:each="attribute : ${attributes}">
 					<span style="font-weight:bold" th:text="${attribute.key}"></span>:
 					<span
 						th:text="${attribute.value}"></span>
 				</li>
-			</ul>
-			<p th:text="${email}"></p>
+			</ul> -->
+			<!-- <p th:text="${email}"></p> -->
 		</div>
 	</article>
 
