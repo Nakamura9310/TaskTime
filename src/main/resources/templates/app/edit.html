@@ -3,52 +3,65 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Edit</title>
+	<title>TaskTime</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 
 <body>
-	タスク編集
-	<form method="POST" th:object="${task}" th:action="@{/app/edit/{taskID} (taskID=*{taskID}) }">
-		<table border=1>
-			<thead>
-				<tr>
-					<th>Task</th>
-					<th>見積時間</th>
-					<th>予定日</th>
-					<th>開始時刻</th>
-					<th>優先度</th>
-				</tr>
-			</thead>
+	<article>
+		<!-- サイドバー -->
+		<div class="sidebar">
+			TaskTimeApp
+			<a th:href="@{/app/top}"><button>TOPへ</button></a><br>
+			<a th:href="@{/app/today}"><button>today表示</button></a><br>
+			<a th:href="@{/app/done}"><button>done表示</button></a><br>
+			<!-- ログアウトボタン -->
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Logout" />
+			</form>
+		</div>
+		<!-- サイドバーここまで -->
 
-			<tbody>
-				<tr>
-					<td><input type="text" th:field="*{taskName}"></td>
-					<td><input type="text" th:field="*{estimatedTime}"></td>
-					<td><input type="date" th:field="*{scheduledDate}"></td>
-					<td><input type="text" th:field="*{startTime}"></td>
-					<td><select th:field="*{priority}">
-							<option value="">未定</option>
-							<option value="A">A：重要</option>
-							<option value="B">B：普通</option>
-							<option value="C">C：後で</option>
-						</select></td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="content">
 
-		<p style="text-align:center">
-			<button>更新</button>
-		</p>
-	</form>
+			タスク編集
+			<form method="POST" th:object="${task}" th:action="@{/app/edit/{taskID} (taskID=*{taskID}) }">
+				<table border=1>
+					<thead>
+						<tr>
+							<th>Task</th>
+							<th>見積時間</th>
+							<th>予定日</th>
+							<th>開始時刻</th>
+							<th>優先度</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td><input type="text" th:field="*{taskName}"></td>
+							<td><input type="text" th:field="*{estimatedTime}"></td>
+							<td><input type="date" th:field="*{scheduledDate}"></td>
+							<td><input type="time" th:field="*{startTime}"></td>
+							<td><select th:field="*{priority}">
+									<option value="">未定</option>
+									<option value="A">A：重要</option>
+									<option value="B">B：普通</option>
+									<option value="C">C：後で</option>
+								</select></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p style="text-align:center">
+					<button>更新</button>
+				</p>
+			</form>
+
+		</div>
 
 
-
-	<!-- TOPへ戻るボタン -->
-	<p style="text-align:center">
-		<a th:href="@{/app/top}">
-			<button>TOPへ</button>
-		</a>
-	</p>
+	</article>
 
 
 

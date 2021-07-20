@@ -1,8 +1,12 @@
-package com.example.demo.utility;
+package com.example.demo.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 
@@ -16,7 +20,7 @@ import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.service.TaskService;
+import com.example.demo.model.Task;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -29,7 +33,6 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.Calendar.Builder;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.auth.Credentials;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.OAuth2Credentials;
@@ -43,22 +46,15 @@ import com.google.api.client.util.DateTime;
 
 @Service
 @RequiredArgsConstructor
-public class GoogleCalendarAPI {
+public class GoogleCalendarAPIService {
 
     private static final String APPLICATION_NAME = "TaskTime";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     private final OAuth2AuthorizedClientService authorizedClientService;
-//    OAuth2AuthenticationToken authenticationToken;
 
-    // @Value("${security.oauth2.client.registration.google.client-id}")
-    // private static String client_id;
+    private final TaskService taskService;
 
-    // @Value("${security.oauth2.client.registration.google.client-secret}")
-    // private static String client_secret;
-    
-    
-//    private OAuth2AuthorizedClient client = this.getAuthorizedClient(authenticationToken);
     
 
     private HttpRequestInitializer getCredentials(OAuth2AuthenticationToken authenticationToken) {
@@ -67,6 +63,8 @@ public class GoogleCalendarAPI {
     					authenticationToken.getAuthorizedClientRegistrationId(),
     					authenticationToken.getName());
     	
+        //accessToken取得処理
+        //null時に再ログインを求めること                
     	OAuth2AccessToken oauth2AccessToken = client.getAccessToken();
     	
         AccessToken accessToken = new AccessToken(oauth2AccessToken.getTokenValue(), Date.from(oauth2AccessToken.getExpiresAt()));
@@ -87,8 +85,8 @@ public class GoogleCalendarAPI {
             .setApplicationName(APPLICATION_NAME)
             .build();
 
-        EventDateTime startEventDateTime = new EventDateTime().setDateTime(new DateTime("2021-07-14T20:00:00+09:00")); // イベント開始日時
-        EventDateTime endEventDateTime = new EventDateTime().setDateTime(new DateTime("2021-07-14T21:00:00+09:00")); // イベント終了日時
+        EventDateTime startEventDateTime = new EventDateTime().setDateTime(new DateTime("2021-07-19T17:00:00+09:00")); // イベント開始日時
+        EventDateTime endEventDateTime = new EventDateTime().setDateTime(new DateTime("2021-07-19T18:00:00+09:00")); // イベント終了日時
 
         String summary = "テスト";
         String description = "テスト";
@@ -97,6 +95,58 @@ public class GoogleCalendarAPI {
             .setSummary(summary)
             .setDescription(description)
             .setColorId("2") // green
+            .setStart(startEventDateTime)
+            .setEnd(endEventDateTime);
+
+        String gcal_id = "primary";
+
+        event = service.events().insert(gcal_id, event).execute();
+
+        return event.getId();
+    }
+
+
+    //GoogleCalendar　イベント追加
+    public String addEvent(OAuth2AuthenticationToken authenticationToken, int taskID) throws GeneralSecurityException, IOException {
+
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+
+        Calendar service = new Calendar
+            .Builder(HTTP_TRANSPORT, 
+                        JSON_FACTORY, 
+                        getCredentials(authenticationToken))
+            .setApplicationName(APPLICATION_NAME)
+            .build();
+
+        DateTimeFormatter ymd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter hm = DateTimeFormatter.ofPattern("HH:mm");
+
+        //選択中task情報取得
+        Task task = taskService.selectOne(taskID);
+
+        //String「yyyy-MM-dd」をLocalDateへ
+        LocalDate startDate = LocalDate.parse(task.getScheduledDate(), ymd);
+        //String「HH:mm」をLocalDateTImeへ
+        LocalTime startTime = LocalTime.parse(task.getStartTime(), hm);
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+
+        double estimated = task.getEstimatedTime();
+        int estimatedMins = (int)((estimated % 1) * 60);
+        int estimatedHours = (int)Math.floor(estimated);
+
+        System.out.println(estimatedMins);
+        System.out.println(estimatedHours);
+
+        LocalDateTime endDateTime = startDateTime.plusHours(estimatedHours).plusMinutes(estimatedMins);
+
+        //DateTime型変換部分において改善の余地あり
+        EventDateTime startEventDateTime = new EventDateTime().setDateTime(new DateTime(startDateTime.toString() + ":00+09:00")); // イベント開始日時 new DateTime("2021-07-14T20:00:00+09:00")
+        EventDateTime endEventDateTime = new EventDateTime().setDateTime(new DateTime(endDateTime.toString() + ":00+09:00")); // イベント終了日時
+
+        String summary = task.getTaskName();
+
+        Event event = new Event()
+            .setSummary(summary)
             .setStart(startEventDateTime)
             .setEnd(endEventDateTime);
 

@@ -3,18 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>done</title>
+    <title>TaskTime</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 
 <body>
     <article>
+        <!-- サイドバー -->
         <div class="sidebar">
             TaskTimeApp
             <a th:href="@{/app/top}"><button>TOPへ</button></a><br>
             <a th:href="@{/app/today}"><button>today表示</button></a><br>
             <a th:href="@{/app/done}"><button>done表示</button></a><br>
+            <!-- ログアウトボタン -->
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Logout" />
+            </form>
         </div>
+        <!-- サイドバーここまで -->
 
         <div class="content">
 
@@ -45,7 +51,7 @@
                             </form>
                         </td>
                         <td>
-                            <form method="POST" th:action="@{/app/delete/{taskID} (taskID=*{taskID}) }">
+                            <form method="POST" th:action="@{/app/deleteDone/{taskID} (taskID=*{taskID}) }">
                                 <button>Delete</button>
                             </form>
                         </td>

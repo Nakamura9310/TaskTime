@@ -3,15 +3,11 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>top</title>
+	<title>TaskTime</title>
 	<link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
-
-
-
 </head>
 
 <body>
-
 	<article>
 		<!-- サイドバー -->
 		<div class="sidebar">
@@ -40,37 +36,30 @@
 				<table border=1>
 					<thead class="task-table-header">
 						<tr>
-							<th>1.Task</th>
-							<th>2.見積時間(h)</th>
-							<th>3.予定日</th>
-							<th>4.開始時刻</th>
-							<th>5.完了ボタン</th>
-							<th>6.編集ボタン</th>
-							<th>7.累計実行時間</th>
-							<th>8.完了or未完了</th>
-							<th>9.完了日</th>
-							<th>10優先度
-								<form method="POST" th:action="@{/app/top/priority}"><button>ソート</button></form>
-							</th>
+							<th>Task</th>
+							<th>見積時間(h)</th>
+							<th>予定日</th>
+							<th>開始時刻</th>
+							<th>完了</th>
+							<th>編集</th>
+							<th>優先度<form method="POST" th:action="@{/app/top/priority}"><button>ソート</button></form></th>
+							<th>Calendar追加</th>
+							<th>削除</th>
 						</tr>
 					</thead>
-
+					
 					<tbody th:each="task:${task}" th:object="${task}">
 						<tr>
-							<td th:text="*{taskName}">1</td>
-							<td th:text="*{estimatedTime}">2</td>
-							<td th:text="*{scheduledDate}">3</td>
-							<td th:text="*{startTime}">4</td>
-							<td>
-								<form method="POST" th:action="@{/app/done/{taskID} (taskID=*{taskID}) }">
-									<button>done</button>
-								</form>
-							</td>
+							<td th:text="*{taskName}"></td>
+							<td th:text="*{estimatedTime}"></td>
+							<td th:text="*{scheduledDate}"></td>
+							<td th:text="*{startTime}"></td>
+							<td><form method="POST" th:action="@{/app/done/{taskID} (taskID=*{taskID}) }"><button>✓</button></form></td>
 							<td><a th:href="@{/app/edit/{taskID} (taskID=*{taskID}) }"><button>編集</button></a></td>
-							<td th:text="*{accumlatedTime}">7</td>
-							<td th:text="*{done}">8</td>
-							<td th:text="*{completionDate}"></td>
 							<td th:text="*{priority}"></td>
+							<td><form th:action="@{/app/event/{taskID} (taskID=*{taskID}) }" method="POST"><button>add</button></form></td>
+							<td><form method="POST" th:action="@{/app/deleteTop/{taskID} (taskID=*{taskID}) }"><button>Delete</button></form>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -99,7 +88,8 @@
 					<td th:text="${sat}"></td>
 					<td th:text="${sun}"></td>
 				</tbody>
-				<!-- <tbody>
+				<!-- JavaScript使用
+					<tbody>
 					<td></td>
 					<td><span id="sun"></span></td>
 					<td><span id="mon"></span></td>
@@ -167,13 +157,13 @@
 			<p th:text="${authorizedClient.clientRegistration.clientName}"></p><br> -->
 
 			<!-- ユーザ属性の一覧 -->
-			<!-- <ul>OAuth2Userのattribute一覧
+			<ul>OAuth2Userのattribute一覧
 				<li th:each="attribute : ${attributes}">
 					<span style="font-weight:bold" th:text="${attribute.key}"></span>:
 					<span
 						th:text="${attribute.value}"></span>
 				</li>
-			</ul> -->
+			</ul>
 			<!-- <p th:text="${email}"></p> -->
 		</div>
 	</article>

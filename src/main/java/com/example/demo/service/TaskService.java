@@ -29,8 +29,8 @@ public class TaskService {
     }
 
     //select undoneのみ 予定日順　
-    public List<Task> selectUndoneTasks() {
-        return mapper.selectUndoneTasks();
+    public List<Task> selectUndoneTasks(String userID) {
+        return mapper.selectUndoneTasks(userID);
     }
 
     //select undone 優先度順
@@ -61,9 +61,12 @@ public class TaskService {
      * task新規登録処理
      * @param task
      */
-    public void insertOne(Task task) {
-    	mapper.insertOne(task);
+    public void insertOneTask(Task task) {
+    	mapper.insertOneTask(task);
     }
+    // public void registerUserID(int taskID, String userID) {
+    //     mapper.registerUserID(taskID, userID);
+    // }
 
     //edit
     public void updateOneTask(Task task) {

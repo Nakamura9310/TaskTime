@@ -3,18 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>today</title>
+    <title>TaskTime</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 </head>
 
 <body>
     <article>
+        <!-- サイドバー -->
         <div class="sidebar">
             TaskTimeApp
             <a th:href="@{/app/top}"><button>TOPへ</button></a><br>
             <a th:href="@{/app/today}"><button>today表示</button></a><br>
             <a th:href="@{/app/done}"><button>done表示</button></a><br>
+            <!-- ログアウトボタン -->
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Logout" />
+            </form>
         </div>
+        <!-- サイドバーここまで -->
 
         <div class="content">
 
@@ -25,7 +31,7 @@
             </p>
             <p id="taskname"></p>(taskname表示)<br>
             <p id="elapsedtime">(カウント表示)</p>
-            
+
 
 
             今日のタスク
@@ -54,7 +60,8 @@
                         <td th:text="*{startTime}">4</td>
                         <td>
                             <form method="POST" th:action="@{/app/done/{taskID} (taskID=*{taskID}) }">
-                                <button>完了</button></form>
+                                <button>完了</button>
+                            </form>
                         </td>
                         <td><a th:href="@{/app/edit/{taskID} (taskID=*{taskID}) }"><button>編集</button></a></td>
                         <td th:text="*{accumlatedTime}"></td>
@@ -79,7 +86,7 @@
 
             return hour + ':' + min + ':' + sec;
         }
-        
+
 
         function start() {
 

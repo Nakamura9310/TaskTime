@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -17,16 +18,16 @@ public interface TaskMapper {
     @Select("SELECT * FROM Task")
     public List<Task> selectAllTasks();
 
-    //select undoneのみ 予定日順　
+    //select undoneのみ scheduledDate順　
     @Select("SELECT * FROM Task WHERE done = false ORDER BY " +
         "CASE " +
             "WHEN scheduledDate IS NULL THEN'2' " +//null最後
             "WHEN scheduledDate = '' THEN '1' " +//空文字最後
             "ELSE '0' " +
         "END, scheduledDate ASC")
-    public List<Task> selectUndoneTasks();
+    public List<Task> selectUndoneTasks(@Param("userID") String usrID);
 
-    //select　優先度順
+    //select　undoneのみ　priority順
     @Select("SELECT * FROM Task WHERE done = false ORDER BY " +
         "CASE " +
             "WHEN priority IS NULL THEN '2' " +//null最後
@@ -35,25 +36,42 @@ public interface TaskMapper {
         "END, priority, scheduledDate ASC")
     public List<Task> selectUndoneTasksByPriority();
 
+
+    //select undone,todayのみ startTime順
+    @Select("SELECT * FROM Task WHERE scheduledDate = CURRENT_DATE AND done = false ORDER BY " +
+        "CASE " +
+            "WHEN startTime IS NULL THEN '2' " +//null最後
+            "WHEN startTime = '' THEN '1' " +//空文字最後
+            "ELSE '0' " +
+        "END, startTime ASC")
+    public List<Task> selectTodayTask();
+
+
     //select doneのみ
     @Select("SELECT * FROM Task WHERE done = true")
     public List<Task> selectDoneTasks();
 
-    //select todayのみ
-    @Select("SELECT * FROM Task WHERE scheduledDate = CURRENT_DATE AND done = false")
-    public List<Task> selectTodayTask();
+
     
     /**
-     * select1件処理
+     * select1件
      * @param taskID
      * @return
      */
     @Select("SELECT * FROM Task WHERE taskID = #{taskID}")
     public Task selectOne(int taskID);
+
+
+
+
+
+
     
     //insert1件
-    @Insert("INSERT INTO Task (taskName, estimatedTime, scheduledDate, startTime) VALUES (#{taskName}, #{estimatedTime}, #{scheduledDate}, #{startTime})")
-    public void insertOne(Task task);
+    @Insert("INSERT INTO Task (userID, taskName, estimatedTime, scheduledDate, startTime) VALUES (#{userID}, #{taskName}, #{estimatedTime}, #{scheduledDate}, #{startTime})")
+    public void insertOneTask(Task task);
+
+
 
     //edit task編集
     @Update("UPDATE Task SET "+
@@ -74,6 +92,9 @@ public interface TaskMapper {
      */
     @Update("UPDATE Task SET done = true, completionDate = CURRENT_DATE WHERE taskID = #{taskID}")
     public void done(int taskID);
+
+
+
 
     /**
      * undone処理

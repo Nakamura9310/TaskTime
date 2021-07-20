@@ -8,7 +8,7 @@ import lombok.Data;
 public class Task {
 	
 	//User情報と紐付けするためのフィールド
-	private int userID;
+	private String userID;
 	
 	//task識別番号
 	private int taskID;
