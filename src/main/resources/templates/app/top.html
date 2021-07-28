@@ -4,125 +4,163 @@
 <head>
 	<meta charset="UTF-8">
 	<title>TaskTime</title>
+
+	<!-- CSS -->
 	<link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+
+	<!-- Bootstrap -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
 </head>
 
 <body>
-	<article>
-		<!-- サイドバー -->
-		<div class="sidebar">
-			TaskTimeApp
-			<a th:href="@{/app/top}"><button>TOPへ</button></a><br>
-			<a th:href="@{/app/today}"><button>today表示</button></a><br>
-			<a th:href="@{/app/done}"><button>done表示</button></a><br>
-			<!-- ログアウトボタン -->
-			<form th:action="@{/logout}" method="post">
-				<input type="submit" value="Logout" />
-			</form>
-		</div>
-		<!-- サイドバーここまで -->
-
-		<div class="content">
-			<form th:action="@{/app/test}" method="post">
-				<input type="submit" value="test" />
-			</form>
-
-			<p style="text-align:center">
-				<a th:href="@{/app/new}"><button>+ NewTask</button></a>
-			</p>
-
-			<h3>タスク一覧</h3>
-			<div class="task-table">
-				<table border=1>
-					<thead class="task-table-header">
-						<tr>
-							<th>Task</th>
-							<th>見積時間(h)</th>
-							<th>予定日</th>
-							<th>開始時刻</th>
-							<th>完了</th>
-							<th>編集</th>
-							<th>優先度<form method="POST" th:action="@{/app/top/priority}"><button>ソート</button></form></th>
-							<th>Calendar追加</th>
-							<th>削除</th>
-						</tr>
-					</thead>
-					
-					<tbody th:each="task:${task}" th:object="${task}">
-						<tr>
-							<td th:text="*{taskName}"></td>
-							<td th:text="*{estimatedTime}"></td>
-							<td th:text="*{scheduledDate}"></td>
-							<td th:text="*{startTime}"></td>
-							<td><form method="POST" th:action="@{/app/done/{taskID} (taskID=*{taskID}) }"><button>✓</button></form></td>
-							<td><a th:href="@{/app/edit/{taskID} (taskID=*{taskID}) }"><button>編集</button></a></td>
-							<td th:text="*{priority}"></td>
-							<td><form th:action="@{/app/event/{taskID} (taskID=*{taskID}) }" method="POST"><button>add</button></form></td>
-							<td><form method="POST" th:action="@{/app/deleteTop/{taskID} (taskID=*{taskID}) }"><button>Delete</button></form>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+	<!-- ナビゲーションバー -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+		<div class="container-fluid">
+			<a class="navbar-brand text-dark" th:href="@{/app/top}">TaskTime</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+				aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-link active" aria-current="page" th:href="@{/app/top}">Top</a>
+					<a class="nav-link" th:href="@{/app/today}">today</a>
+					<a class="nav-link" th:href="@{/app/done}">done</a>
+					<form class="nav-link" th:action="@{/logout}" method="post"><input type="submit" value="Logout"
+							class="btn btn-outline-secondary btn-sm"></form>
+				</div>
 			</div>
 
-			今週のタスク状況
-			<br>
-			<table border=1>
-				<thead>
-					<th></th>
-					<th>月</th>
-					<th>火</th>
-					<th>水</th>
-					<th>木</th>
-					<th>金</th>
-					<th>土</th>
-					<th>日</th>
+		</div>
+	</nav>
+
+
+
+	<!-- GoogleCalendarテスト
+			<form th:action="@{/app/test}" method="post">
+				<input type="submit" value="test" />
+			</form> -->
+
+	<div class="container-lg">
+
+		<p style="text-align:center">
+			<a th:href="@{/app/new}"><button class="mt-2 btn btn-primary" autofocus>+ NewTask</button></a>
+		</p>
+
+		<h5>タスク一覧</h5>
+
+		<!-- taskが無い時 -->
+		<div th:if="!${task.size()}">
+			<h4 class="shadow" style="text-align: center;">タスクはありません！</h4>
+		</div>
+
+
+		<!-- タスクがある時 -->
+		<div th:if="${task.size()}" class="task-table">
+
+			<table class="table table-borderd table-striped table-hover table-sm shadow">
+				<thead class="task-table-header">
+					<tr class="table-light">
+						<th style="text-align: center;">タスク</th>
+						<th style="text-align: center;">見積時間(h)</th>
+						<th style="text-align: center;">
+							<form method="POST" th:action="@{/app/top/date}"><button
+									class="btn btn-dark btn-sm">予定日</button></form>
+						</th>
+						<th style="text-align: center;">開始時刻</th>
+						<th style="text-align: center;">カレンダー</th>
+						<th style="text-align: center;">完了</th>
+						<th style="text-align: center;">編集</th>
+						<th style="text-align: center;">
+							<form method="POST" th:action="@{/app/top/priority}"><button
+									class="btn btn-dark btn-sm">優先度</button></form>
+						</th>
+						<th style="text-align: center;" class="text-danger">削除</th>
+					</tr>
 				</thead>
-				<tbody>
-					<td></td>
-					<td th:text="${mon}"></td>
-					<td th:text="${tue}"></td>
-					<td th:text="${wed}"></td>
-					<td th:text="${thu}"></td>
-					<td th:text="${fri}"></td>
-					<td th:text="${sat}"></td>
-					<td th:text="${sun}"></td>
-				</tbody>
-				<!-- JavaScript使用
-					<tbody>
-					<td></td>
-					<td><span id="sun"></span></td>
-					<td><span id="mon"></span></td>
-					<td><span id="tue"></span></td>
-					<td><span id="wed"></span></td>
-					<td><span id="thu"></span></td>
-					<td><span id="fri"></span></td>
-					<td><span id="sat"></span></td>
-				</tbody> -->
-				<tbody>
-					<td>見積時間(h)</td>
-					<td th:text="${monEstimatedTime}"></td>
-					<td th:text="${tueEstimatedTime}"></td>
-					<td th:text="${wedEstimatedTime}"></td>
-					<td th:text="${thuEstimatedTime}"></td>
-					<td th:text="${friEstimatedTime}"></td>
-					<td th:text="${satEstimatedTime}"></td>
-					<td th:text="${sunEstimatedTime}"></td>
+
+				<tbody th:each="task:${task}" th:object="${task}">
+					<tr>
+						<td th:text="*{taskName}" style="text-align: center;" class="fw-bold"></td>
+						<td th:text="*{estimatedTime}" style="text-align: center;"></td>
+						<td style="text-align: center;" th:switch="*{scheduledDate}">
+							<span th:case="${today}" class="text-danger"><b>今日</b></span>
+							<span th:case="${tomorrow}">明日</span>
+							<span th:case=* th:text="*{#strings.replace(scheduledDate, '-', '/')}"></span>
+						</td>
+						<td th:text="*{startTime}" style="text-align: center;"></td>
+
+						<td style="text-align: center;">
+							<form th:action="@{/app/event/{taskID} (taskID=*{taskID}) }" method="POST"
+								onsubmit="return checkAdd()">
+								<button type="submit" class="btn btn-info btn-sm">add</button>
+							</form>
+						</td>
+
+
+						<td style="text-align: center;">
+							<form method="POST" th:action="@{/app/doneTop/{taskID} (taskID=*{taskID}) }"><button
+									class="btn btn-warning btn-sm">✓</button></form>
+						</td>
+
+						<td style="text-align: center;">
+							<a th:href="@{/app/edit/{taskID} (taskID=*{taskID}) }">
+								<button type="button" class="btn btn-light btn-sm">edit</button></a>
+						</td>
+
+						<td style="text-align: center;" th:text="*{priority}"></td>
+
+						<td style="text-align: center;">
+							<form method="POST" th:action="@{/app/deleteTop/{taskID} (taskID=*{taskID}) }"
+								onsubmit="return checkDelete()">
+								<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+							</form>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 
+		</div>
+
+
+		<table class="mt-3 table table-primary table-borderd table-striped table-hover table-sm shadow">
+
+			<thead class="text-center">
+				<th>今週のタスク状況</th>
+				<div th:each="week:${week}">
+					<td th:if="!${week == todayofweek}" class="text-center"><span th:text="${week}"></span></td>
+					<td th:if="${week == todayofweek}" class="text-center"><b class="text-danger" th:text="${week}"></b>
+					</td>
+				</div>
+			</thead>
+
+			<tbody>
+				<td style="text-align: center;">見積時間(h)</td>
+				<div th:each="weekEstimatedTime:${weekEstimatedTime}">
+					<td style="text-align: center;">
+						<p th:text="${weekEstimatedTime}" th:if="!${#strings.equals(weekEstimatedTime, '0.0')}">
+						</p>
+					</td>
+				</div>
+			</tbody>
+
+		</table>
 
 
 
 
-			<iframe 
-				th:src="|https://calendar.google.com/calendar/
+
+
+		<h3 class="mt-5 bg-white rounded" style="text-align:center">Your GoogleCalendar</h3>
+		<div style="text-align: center;">
+			<iframe th:src="|https://calendar.google.com/calendar/
 				embed?
 
-				src=${email}
+				src=${userID}
 				
 				&ctz=Asia%2FTokyo&amp;
-
 				height=600&amp;
 				wkst=2&amp;
 				bgcolor=%23ffffff&amp;
@@ -135,68 +173,38 @@
 				showCalendars=0&amp;
 				showTabs=0&amp;
 				showPrint=0&amp;
-				showDate=0&amp;|"
-				style="border:solid 1px #777" 
-				width="800" 
-				height="500" 
-				frameborder="0" 
-			>
+				showDate=0&amp;|" style="border:solid 1px #777" width="800" height="500" frameborder="0">
 			</iframe>
-
-
-			<!-- sec:authorize="isAuthenticated()"
-			<p sec:authorize="isAuthenticated()"></p><br>
-
-			sec:authentication="name"
-			<p sec:authentication="name"></p><br>
-
-			sec:authentication="principal.attributes['name']"
-			<p sec:authentication="principal.attributes['name']"></p><br>
-
-			th:text="${authorizedClient.clientRegistration.clientName}"
-			<p th:text="${authorizedClient.clientRegistration.clientName}"></p><br> -->
-
-			<!-- ユーザ属性の一覧 -->
-			<ul>OAuth2Userのattribute一覧
-				<li th:each="attribute : ${attributes}">
-					<span style="font-weight:bold" th:text="${attribute.key}"></span>:
-					<span
-						th:text="${attribute.value}"></span>
-				</li>
-			</ul>
-			<!-- <p th:text="${email}"></p> -->
 		</div>
-	</article>
 
-	<!-- JavaScriptのライブラリdayjs使用（CDN） -->
-	<!-- <script src="https://unpkg.com/dayjs"></script>
+	</div>
+
+
+
+	<!-- JavaScript -->
 	<script>
-		dayjs.locale('ja');
-		
-		const today = dayjs();
-		const fmt = 'MM-DD'
-		
-		//dayjsを用いて週の先頭日付を取得し、１日ずつ足して今週の毎日の日付取得
-		const sun = today.startOf('week').format(fmt);
-		const mon = today.startOf('week').add(1, 'd').format(fmt);
-		const tue = today.startOf('week').add(2, 'd').format(fmt);
-		const wed = today.startOf('week').add(3, 'd').format(fmt);
-		const thu = today.startOf('week').add(4, 'd').format(fmt);
-		const fri = today.startOf('week').add(5, 'd').format(fmt);
-		const sat = today.startOf('week').add(6, 'd').format(fmt);
-		
-		//htmlへid属性の値として渡す
-		document.getElementById('sun').textContent = sun;
-		document.getElementById('mon').textContent = mon;
-		document.getElementById('tue').textContent = tue;
-		document.getElementById('wed').textContent = wed;
-		document.getElementById('thu').textContent = thu;
-		document.getElementById('fri').textContent = fri;
-		document.getElementById('sat').textContent = sat; -->
-
-
-
+		//Calendarに予定追加時のダイアログ
+		function checkAdd() {
+			if (window.confirm('以下の要素からGoogleCalendarに予定を追加してよろしいですか？\n見積時間\n予定日\n開始時刻')) {
+				return true;
+			} else {
+				return false; // 送信を中止
+			}
+		}
+		//Delete時のダイアログ
+		function checkDelete() {
+			if (window.confirm('タスクを削除してよろしいですか？')) {
+				return true; // 「OK」時は送信を実行
+			} else {
+				return false; // 送信を中止
+			}
+		}
 	</script>
+
+	<!-- Bootstrap -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+		crossorigin="anonymous"></script>
 
 
 </body>

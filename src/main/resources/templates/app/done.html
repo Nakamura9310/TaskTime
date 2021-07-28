@@ -4,63 +4,88 @@
 <head>
     <meta charset="UTF-8">
     <title>TaskTime</title>
+
+    <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
 </head>
 
 <body>
-    <article>
-        <!-- サイドバー -->
-        <div class="sidebar">
-            TaskTimeApp
-            <a th:href="@{/app/top}"><button>TOPへ</button></a><br>
-            <a th:href="@{/app/today}"><button>today表示</button></a><br>
-            <a th:href="@{/app/done}"><button>done表示</button></a><br>
-            <!-- ログアウトボタン -->
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Logout" />
-            </form>
-        </div>
-        <!-- サイドバーここまで -->
-
-        <div class="content">
-
-            完了済みタスク一覧
-            <table border=1>
-                <thead>
-                    <tr>
-                        <th>Task</th>
-                        <th>見積時間</th>
-                        <th>累計実行時間</th>
-                        <th>完了or未完了</th>
-                        <th>完了日</th>
-                        <th>未完了に戻す</th>
-                        <th>完全に削除</th>
-                    </tr>
-                </thead>
-
-                <tbody th:each="task:${task}" th:object="${task}">
-                    <tr>
-                        <td th:text="*{taskName}"></td>
-                        <td th:text="*{estimatedTime}"></td>
-                        <td th:text="*{accumlatedTime}"></td>
-                        <td th:text="*{done}"></td>
-                        <td th:text="*{completionDate}"></td>
-                        <td>
-                            <form method="POST" th:action="@{/app/undone/{taskID} (taskID=*{taskID}) }">
-                                <button>Undone</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="POST" th:action="@{/app/deleteDone/{taskID} (taskID=*{taskID}) }">
-                                <button>Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- ナビゲーションバー -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand text-dark" th:href="@{/app/top}">TaskTime</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link" aria-current="page" th:href="@{/app/top}">Top</a>
+                    <a class="nav-link" th:href="@{/app/today}">today</a>
+                    <a class="nav-link active" aria-current="page" th:href="@{/app/done}">done</a>
+                    <form class="nav-link" th:action="@{/logout}" method="post"><input type="submit" value="Logout"
+                            class="btn btn-outline-secondary btn-sm"></form>
+                </div>
+            </div>
 
         </div>
-    </article>
+    </nav>
+
+    <div class="container-lg">
+
+        
+        <h5>完了済みタスク一覧</h5>
+        <table class="table table-secondary table-borderd table-striped table-hover table-sm shadow">
+            <thead class="task-table-header">
+                <tr>
+                    <th style="text-align: center;">タスク</th>
+                    <th style="text-align: center;">見積時間(h)</th>
+                    <th style="text-align: center;">完了日</th>
+                    <th style="text-align: center;">未完了に戻す</th>
+                    <th style="text-align: center;">完全に削除</th>
+                </tr>
+            </thead>
+
+            <tbody th:each="task:${task}" th:object="${task}">
+                <tr>
+                    <td style="text-align: center;" th:text="*{taskName}"></td>
+                    <td style="text-align: center;" th:text="*{estimatedTime}"></td>
+                    <td style="text-align: center;" th:text="*{completionDate}"></td>
+                    <td style="text-align: center;">
+                        <form method="POST" th:action="@{/app/undone/{taskID} (taskID=*{taskID}) }">
+                            <button class="btn btn-warning btn-sm">Undone</button>
+                        </form>
+                    </td>
+                    <td style="text-align: center;">
+                        <form method="POST" th:action="@{/app/deleteDone/{taskID} (taskID=*{taskID}) }" onsubmit="return checkDelete()">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        //Delete時のダイアログ
+		function checkDelete() {
+			if(window.confirm('タスクを削除してよろしいですか？')){
+				return true; // 「OK」時は送信を実行
+			} else {
+				return false; // 送信を中止
+			}
+		}
+    </script>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
 
 
 </body>

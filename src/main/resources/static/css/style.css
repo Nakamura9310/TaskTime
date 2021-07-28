@@ -1,16 +1,4 @@
-article {
-    display: flex;
-}
 
-.sidebar {
-    background-color:lightblue;
-    width: 10vw;
-    text-align: center;
-}
-
-.content {
-    margin-left: 10px;
-}
 
 .task-table {
     overflow-y:scroll;
@@ -20,6 +8,6 @@ article {
 .task-table-header {
     position: sticky;
     top: 0;
-    background-color: blanchedalmond;
 }
+
 

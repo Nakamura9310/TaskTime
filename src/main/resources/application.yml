@@ -14,13 +14,14 @@ spring:
 #      data-locations:
 #      - classpath:data.sql
 
+#GoogleOauth2.0に関する設定
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: {client-id}
-            client-secret: {client-secret}
+            client-id: 705618906495-6m33h9ak3ld3odk81povkie6r4jqn6i4.apps.googleusercontent.com
+            client-secret: UGFRhCnFEYN2G8tZnDEDyrAq
             scope:
             - email
             - profile

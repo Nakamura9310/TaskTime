@@ -14,43 +14,64 @@ import com.example.demo.model.Task;
 @Mapper
 public interface TaskMapper {
 
-    //select全件
+    
+    /**
+     * select全件
+     * @return
+     */
     @Select("SELECT * FROM Task")
     public List<Task> selectAllTasks();
 
-    //select undoneのみ scheduledDate順　
-    @Select("SELECT * FROM Task WHERE done = false ORDER BY " +
+
+    /**
+     * select undoneのみ scheduledDate順　
+     * @param userID
+     * @return
+     */
+    @Select("SELECT * FROM Task WHERE done = false AND userID = #{userID} ORDER BY " +
         "CASE " +
             "WHEN scheduledDate IS NULL THEN'2' " +//null最後
             "WHEN scheduledDate = '' THEN '1' " +//空文字最後
             "ELSE '0' " +
-        "END, scheduledDate ASC")
-    public List<Task> selectUndoneTasks(@Param("userID") String usrID);
+        "END, scheduledDate ASC, startTime ASC")
+    public List<Task> selectUndoneTasks(@Param("userID") String userID);
 
-    //select　undoneのみ　priority順
-    @Select("SELECT * FROM Task WHERE done = false ORDER BY " +
+
+    /**
+     * select　undoneのみ　priority順
+     * @param userID
+     * @return
+     */
+    @Select("SELECT * FROM Task WHERE done = false AND userID = #{userID} ORDER BY " +
         "CASE " +
             "WHEN priority IS NULL THEN '2' " +//null最後
             "WHEN priority = '' THEN '1' " +//空文字最後
             "ELSE '0' " +
-        "END, priority, scheduledDate ASC")
-    public List<Task> selectUndoneTasksByPriority();
+        "END, priority ASC, scheduledDate ASC")
+    public List<Task> selectUndoneTasksByPriority(@Param("userID") String userID);
 
 
-    //select undone,todayのみ startTime順
-    @Select("SELECT * FROM Task WHERE scheduledDate = CURRENT_DATE AND done = false ORDER BY " +
+    /**
+     * select undone,todayのみ startTime順
+     * @param userID
+     * @return
+     */
+    @Select("SELECT * FROM Task WHERE scheduledDate = CURRENT_DATE AND done = false AND userID = #{userID} ORDER BY " +
         "CASE " +
             "WHEN startTime IS NULL THEN '2' " +//null最後
             "WHEN startTime = '' THEN '1' " +//空文字最後
             "ELSE '0' " +
         "END, startTime ASC")
-    public List<Task> selectTodayTask();
+    public List<Task> selectTodayTask(@Param("userID") String userID);
 
 
-    //select doneのみ
-    @Select("SELECT * FROM Task WHERE done = true")
-    public List<Task> selectDoneTasks();
-
+    /**
+     * select doneのみ
+     * @param userID
+     * @return
+     */
+    @Select("SELECT * FROM Task WHERE done = true AND userID = #{userID} ORDER BY completionDate ASC")
+    public List<Task> selectDoneTasks(@Param("userID") String userID);
 
     
     /**
@@ -61,19 +82,19 @@ public interface TaskMapper {
     @Select("SELECT * FROM Task WHERE taskID = #{taskID}")
     public Task selectOne(int taskID);
 
-
-
-
-
-
     
-    //insert1件
+    /**
+     * insert1件
+     * @param task
+     */
     @Insert("INSERT INTO Task (userID, taskName, estimatedTime, scheduledDate, startTime) VALUES (#{userID}, #{taskName}, #{estimatedTime}, #{scheduledDate}, #{startTime})")
     public void insertOneTask(Task task);
 
 
-
-    //edit task編集
+    /**
+     * edit.htmlのタスク編集処理
+     * @param task
+     */
     @Update("UPDATE Task SET "+
         "taskName = #{taskName}, "+
         "estimatedTime = #{estimatedTime}, "+
@@ -94,8 +115,6 @@ public interface TaskMapper {
     public void done(int taskID);
 
 
-
-
     /**
      * undone処理
      * done→falseへ
@@ -105,7 +124,11 @@ public interface TaskMapper {
     @Update("UPDATE Task SET done = false, completionDate = null WHERE taskID = #{taskID}")
     public void undone(int taskID);
 
-    //taskのdelete処理
+
+    /**
+     * Delete処理
+     * @param taskID
+     */
     @Delete("DELETE from Task WHERE taskID = #{taskID}")
     public void deleteTask(int taskID);
 

@@ -4,78 +4,115 @@
 <head>
     <meta charset="UTF-8">
     <title>TaskTime</title>
+    <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 
 <body>
-    <article>
-        <!-- サイドバー -->
-        <div class="sidebar">
-            TaskTimeApp
-            <a th:href="@{/app/top}"><button>TOPへ</button></a><br>
-            <a th:href="@{/app/today}"><button>today表示</button></a><br>
-            <a th:href="@{/app/done}"><button>done表示</button></a><br>
-            <!-- ログアウトボタン -->
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Logout" />
-            </form>
+    <!-- ナビゲーションバー -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand text-dark" th:href="@{/app/top}">TaskTime</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link" th:href="@{/app/top}">Top</a>
+                    <a class="nav-link active" aria-current="page" th:href="@{/app/today}">today</a>
+                    <a class="nav-link" th:href="@{/app/done}">done</a>
+                    <form class="nav-link" th:action="@{/logout}" method="post"><input type="submit" value="Logout"
+                            class="btn btn-outline-secondary btn-sm"></form>
+                </div>
+            </div>
         </div>
-        <!-- サイドバーここまで -->
+    </nav>
 
-        <div class="content">
+    <div class="container-lg">
 
-            <!-- タイマー表示 -->
-            <p>
-                <input type="button" value="カウント開始" id="startcount" onclick="start();">
-                <input type="button" value="カウント停止" id="stopcount" onclick="stop();">
-            </p>
-            <p id="taskname"></p>(taskname表示)<br>
-            <p id="elapsedtime">(カウント表示)</p>
+        <p style="text-align:center">
+			<a th:href="@{/app/new}"><button class="mt-2 btn btn-primary">+ NewTask</button></a>
+		</p>
 
+        <h5>今日のタスク</h5>
 
+        <!-- taskが無い時 -->
+        <div th:if="!${task.size()}">
+            <h4 style="text-align: center;">タスクはありません！</h4>
+        </div>
 
-            今日のタスク
-            <table border=1>
-                <thead>
+        <!-- タスクがある時 -->
+        <div th:if="${task.size()}" class="task-table">
+
+            
+            <table class="table table-danger table-borderd table-striped table-hover table-sm shadow">
+                <thead class="task-table-header">
                     <tr>
-                        <!-- <th></th> -->
-                        <th>1.Task</th>
-                        <th>2.見積時間</th>
-                        <th>3.予定日</th>
-                        <th>4.開始時刻</th>
-                        <th>5.完了ボタン</th>
-                        <th>6.編集ボタン</th>
-                        <th>7.累計実行時間</th>
-                        <th>8.完了or未完了</th>
-                        <th>9.優先度</th>
+                        <th style="text-align: center;">タスク</th>
+                        <th style="text-align: center;">見積時間(h)</th>
+                        <th style="text-align: center;">開始時刻</th>
+                        <th style="text-align: center;">完了</th>
+                        <th style="text-align: center;">編集</th>
+                        <th style="text-align: center;">優先度</th>
                     </tr>
                 </thead>
 
                 <tbody th:each="task:${task}" th:object="${task}">
                     <tr>
-                        <!-- <td><input type="button" value="▶" onclick="start();"></td> -->
-                        <td th:text="*{taskName}"></td>
-                        <td th:text="*{estimatedTime}">2</td>
-                        <td th:text="*{scheduledDate}">3</td>
-                        <td th:text="*{startTime}">4</td>
-                        <td>
-                            <form method="POST" th:action="@{/app/done/{taskID} (taskID=*{taskID}) }">
-                                <button>完了</button>
-                            </form>
+                        <td th:text="*{taskName}" style="text-align: center;" class="fw-bold"></td>
+                        <td th:text="*{estimatedTime}" style="text-align: center;"></td>
+                        <td th:text="*{startTime}" style="text-align: center;"></td>
+                        
+                        <td style="text-align: center;">
+                            <form method="POST" th:action="@{/app/doneToday/{taskID} (taskID=*{taskID}) }"><button
+                                    class="btn btn-warning btn-sm">✓</button></form>
                         </td>
-                        <td><a th:href="@{/app/edit/{taskID} (taskID=*{taskID}) }"><button>編集</button></a></td>
-                        <td th:text="*{accumlatedTime}"></td>
-                        <td th:text="*{done}">8</td>
-                        <td th:text="*{priority}"></td>
+
+                        <td style="text-align: center;">
+                            <a th:href="@{/app/edit/{taskID} (taskID=*{taskID}) }">
+                                <button type="button"class="btn btn-light btn-sm">edit</button></a></td>
+                        
+                        <td style="text-align: center;" th:text="*{priority}"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    </article>
+
+        <h3 class="mt-5 bg-white rounded" style="text-align:center">Your GoogleCalendar</h3>
+		<div style="text-align: center;">
+			<iframe th:src="|https://calendar.google.com/calendar/
+				embed?
+
+				src=${userID}
+				
+				&ctz=Asia%2FTokyo&amp;
+				height=600&amp;
+				wkst=2&amp;
+				bgcolor=%23ffffff&amp;
+				width=800&amp;
+				height=600&amp;
+				frameborder=0&amp;
+				scrolling=no&amp;
+				mode=WEEK&amp;
+				showTitle=0&amp;
+				showCalendars=0&amp;
+				showTabs=0&amp;
+				showPrint=0&amp;
+				showDate=0&amp;|" style="border:solid 1px #777" width="800" height="500" frameborder="0">
+			</iframe>
+		</div>
+
+    </div>
 
 
+    
 
-    <!-- JavaScript -->
+    <!-- JavaScript タイマー部分 未実装-->
     <script th:inline="javascript">
         let PassedTime = 0;
 
@@ -112,6 +149,11 @@
         }
 
     </script>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
 
 
 </body>

@@ -11,16 +11,11 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor//final fieldのコンストラクタを自動的に生成
+@RequiredArgsConstructor//final fieldのコンストラクタを自動的に生成してくれる
 public class TaskService {
 
-    //TaskMapperをコンストラクタインジェクション
+    //@RequiredArgsConstructorによりコンストラクタインジェクション
     private final TaskMapper mapper;
-    // @Autowired
-    // public TaskService(TaskMapper mapper) {
-    //     this.mapper = mapper;
-    // }
-    
 
 
     //select全件
@@ -34,59 +29,46 @@ public class TaskService {
     }
 
     //select undone 優先度順
-    public List<Task> selectUndoneTasksByPriority() {
-        return mapper.selectUndoneTasksByPriority();
+    public List<Task> selectUndoneTasksByPriority(String userID) {
+        return mapper.selectUndoneTasksByPriority(userID);
     }
 
     //select Doneのみ
-    public List<Task> selectDoneTasks() {
-        return mapper.selectDoneTasks();
+    public List<Task> selectDoneTasks(String userID) {
+        return mapper.selectDoneTasks(userID);
     }
 
     //select todayのみ
-    public List<Task> selectTodayTask() {
-        return mapper.selectTodayTask();
+    public List<Task> selectTodayTask(String userID) {
+        return mapper.selectTodayTask(userID);
     }
 
-
-
-
-    
     //select1件
     public Task selectOne(int taskID) {
     	return mapper.selectOne(taskID);
     }
     
-    /**
-     * task新規登録処理
-     * @param task
-     */
+    //新規タスク登録
     public void insertOneTask(Task task) {
     	mapper.insertOneTask(task);
     }
-    // public void registerUserID(int taskID, String userID) {
-    //     mapper.registerUserID(taskID, userID);
-    // }
 
-    //edit
+    //タスク編集
     public void updateOneTask(Task task) {
         mapper.updateOneTask(task);
     }
 
-    /**
-     * 完了ボタン押下時、done処理
-     * @param taskID
-     */
+    //タスク完了状態へdone
     public void done(int taskID) {
         mapper.done(taskID);
     }
 
-    //undone
+    //タスク未完了状態へundone
     public void undone(int taskID) {
         mapper.undone(taskID);
     }
 
-    //delete
+    //delete処理
     public void deleteTask(int taskID) {
         mapper.deleteTask(taskID);
     }

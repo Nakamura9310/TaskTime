@@ -42,7 +42,9 @@ dependencies {
 	implementation group: 'com.google.auth', name: 'google-auth-library-credentials', version: '0.26.0'
 	implementation group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '0.26.0'
 	
-    
+	//Bootstrap
+    implementation 'org.webjars:jquery:3.6.0'
+	implementation 'org.webjars:bootstrap:5.0.0'   
     	
 	
 	//SpringSecurityでOAuth利用する
