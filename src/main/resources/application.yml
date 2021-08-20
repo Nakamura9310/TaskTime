@@ -25,9 +25,14 @@ spring:
       client:
         registration:
           google:
+<<<<<<< HEAD
             client-id: 705618906495-6m33h9ak3ld3odk81povkie6r4jqn6i4.apps.googleusercontent.com
             client-secret: UGFRhCnFEYN2G8tZnDEDyrAq
             # redirect-uri: "https://task-time.net/login/oauth2/code/google"
+=======
+            client-id: [client-id]
+            client-secret: [client-secret]
+>>>>>>> b3e2cda74c10093f6c2f1a05d224c682f48c039f
             scope:
             - email
             - profile
