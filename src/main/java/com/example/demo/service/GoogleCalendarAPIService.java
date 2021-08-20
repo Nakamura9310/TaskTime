@@ -38,8 +38,9 @@ import com.google.api.client.util.DateTime;
 public class GoogleCalendarAPIService {
     
     //@RequiredArgsConstructorによりコンストラクタインジェクション
-    private final OAuth2AuthorizedClientService authorizedClientService;
     private final TaskService taskService;
+    // 認可済みのクライアント情報は OAuth2AuthorizedClientService経由で取得できる
+    private final OAuth2AuthorizedClientService authorizedClientService;
 
     private static final String APPLICATION_NAME = "TaskTime";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -58,7 +59,12 @@ public class GoogleCalendarAPIService {
     			authorizedClientService.loadAuthorizedClient(
     					authenticationToken.getAuthorizedClientRegistrationId(),
     					authenticationToken.getName());
-    	
+        
+        if(client == null) {
+            String message = "OAuth2AuthorizedClientがnullです。";
+            throw new AccessTokenNullException(message);
+        }
+
         //accessToken取得処理
         //null時には再ログインを求めるページへ遷移させる例外処理                
         OAuth2AccessToken oauth2AccessToken = client.getAccessToken();
@@ -77,7 +83,7 @@ public class GoogleCalendarAPIService {
     
     /**
      * GoogleCalendarにイベント追加
-     * 上述のaddEventメソッドで得たrequestInitializerを引数に、Calendar型のserviceを生成
+     * 上述のgetCredentialsメソッドで得たrequestInitializerを引数に、Calendar型のserviceを生成
      * @param authenticationToken
      * @param taskID
      * @return

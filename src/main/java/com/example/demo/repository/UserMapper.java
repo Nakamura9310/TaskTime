@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,5 +22,13 @@ public interface UserMapper {
     //ログイン中のユーザーのsortをdateかpriorityに更新
     @Update("UPDATE GoogleUser SET sort = #{sort} WHERE userID = #{userID}")
     public void updateUserSort(@Param("sort") String sort, @Param("userID") String userID);
+
+    /**
+     * DeleteAll処理②
+     * ログイン中のユーザーのGoogleUserテーブルの情報を削除
+     * @param userID
+     */
+    @Delete("DELETE from GoogleUser WHERE userID = #{userID}")
+    public void deleteAll(@Param("userID") String userID);
     
 }

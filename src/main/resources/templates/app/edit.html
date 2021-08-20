@@ -7,39 +7,54 @@
 	<!-- CSS -->
 	<link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 
-	<!-- Bootstrap -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+	<!-- MaterialBootstrapCDN(https://mdbootstrap.com/docs/b4/jquery/getting-started/cdn/) -->
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+	<!-- Google Fonts -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+	<!-- Bootstrap core CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Material Design Bootstrap -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
 
 </head>
 
 <body>
 	<!-- ナビゲーションバー -->
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<div class="container-fluid">
-			<a class="navbar-brand text-dark" th:href="@{/app/top}">TaskTime</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-				aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-light shadow">
+			<a class="navbar-brand text-dark" th:href="@{/app/top}"><strong>TaskTime</strong></a>
+			<!-- トグルボタン -->
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-				<div class="navbar-nav">
-					<a class="nav-link active" aria-current="page" th:href="@{/app/top}">Top</a>
-					<a class="nav-link" th:href="@{/app/today}">today</a>
-					<a class="nav-link" th:href="@{/app/done}">done</a>
-					<form class="nav-link" th:action="@{/logout}" method="post"><input type="submit" value="Logout"
-							class="btn btn-outline-secondary btn-sm"></form>
-				</div>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link fas fa-home" th:href="@{/app/top}">Top</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link fas fa-book-open" th:href="@{/app/today}">Today</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link fas fa-check" th:href="@{/app/done}">Done</a>
+					</li>
+
+				</ul>
 			</div>
 
-		</div>
-	</nav>
+		</nav>
+	</header>
 
 
 
 	<div class="container-lg">
 
-		<h2 class="p-3 bg-white rounded shadow" style="text-align:center">タスク情報を編集してください</h2>
+		<h2 class="p-3 bg-white text-center">タスク編集画面</h2>
 
 		<form method="POST" th:object="${task}" th:action="@{/app/edit/{taskID} (taskID=*{taskID}) }">
 			<table class="table table-borderd table-striped table-hover">
@@ -47,9 +62,9 @@
 					<tr>
 						<th>Task</th>
 						<th>見積時間</th>
+						<th>優先度</th>
 						<th>予定日</th>
 						<th>開始時刻</th>
-						<th>優先度</th>
 					</tr>
 				</thead>
 
@@ -65,6 +80,13 @@
 							<input id="time" type="range" min="0.5" max="6" step="0.5" value="0.5"
 								th:field="*{estimatedTime}">
 						</td>
+						
+						<td><select th:field="*{priority}" class="form-control">
+								<option value="">未定</option>
+								<option value="A">A：重要</option>
+								<option value="B">B：普通</option>
+								<option value="C">C：後で</option>
+							</select></td>
 
 						<td><input type="date" th:field="*{scheduledDate}" class="form-control"
 								th:classappend="${#fields.hasErrors('scheduledDate')}?'is-invalid'"><br>
@@ -78,18 +100,12 @@
 								th:errors="*{startTime}"></span>
 						</td>
 
-						<td><select th:field="*{priority}" class="form-control">
-								<option value="">未定</option>
-								<option value="A">A：重要</option>
-								<option value="B">B：普通</option>
-								<option value="C">C：後で</option>
-							</select></td>
 					</tr>
 				</tbody>
 			</table>
 
 			<p style="text-align:center">
-				<button class="btn btn-outline-secondary">更新</button>
+				<button class="btn btn-blue-grey">更新</button>
 			</p>
 		</form>
 	</div>
@@ -117,10 +133,15 @@
 		}
 	</script>
 
-	<!-- Bootstrap -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-		crossorigin="anonymous"></script>
+	<!-- MaterialBootstrapCDN(https://mdbootstrap.com/docs/b4/jquery/getting-started/cdn/) -->
+	<!-- JQuery -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
 
 
 

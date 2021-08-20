@@ -21,23 +21,13 @@
 </head>
 
 <body>
-    <div class="container-lg">
 
-        <h2 class="p">エラーが発生しました<i class="far fa-dizzy"></i></h2>
-
-        <p class="mt-5 mb-0">アクセストークンが切れています。</p>
-        <p class="mb-0">恐れ入りますが、再ログインしてください。</p>
+    <div class="container-lg text-center mt-5">
+        <h3>ユーザー様のTaskTime内のすべての情報を削除しました。</h3>
+        <h3>ご利用いただきありがとうございました。</h3>
         <form th:action="@{/logout}" method="post">
-            <input class="btn btn-outline-danger" type="submit" value="ログインに戻る" />
+            <button class="btn btn-outline-danger waves-effect" type="submit">ログイン画面に戻る</form>
         </form>
-
-        <div class="small mt-5">
-            <p>以下、管理者用メッセージ<br>
-                エラー状況は下記の通りです。<br>
-                status:<span th:text="${status}"></span><br>
-                error:<span th:text="${error}"></span><br>
-                message:<span th:text="${message}"></span></p>
-        </div>
 
     </div>
 

@@ -73,4 +73,9 @@ public class TaskService {
         mapper.deleteTask(taskID);
     }
 
+    //DeleteALl処理
+    public void deleteAll(String userID) {
+        mapper.deleteAll(userID);
+    }
+
 }

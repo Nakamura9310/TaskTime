@@ -126,11 +126,22 @@ public interface TaskMapper {
 
 
     /**
-     * Delete処理
+     * DeleteTask処理
      * @param taskID
      */
     @Delete("DELETE from Task WHERE taskID = #{taskID}")
     public void deleteTask(int taskID);
+
+
+    /**
+     * DeleteAll処理①
+     * ②はUserMapper.javaに記載
+     * ログイン中のユーザーのTaskテーブルの情報を削除
+     * @param userID
+     */
+    @Delete("DELETE from Task WHERE userID = #{userID}")
+    public void deleteAll(@Param("userID") String userID);
+    
 
 
 }

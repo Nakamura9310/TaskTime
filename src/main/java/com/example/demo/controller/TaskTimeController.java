@@ -92,6 +92,8 @@ public class TaskTimeController {
 			//ログイン中のユーザーのsort情報取得
 			String sort = userService.selectSort(userID);
 
+			//タスクリスト初期化宣言
+			//下記if文でタスクリストを入れるため
 			List<Task> task = null;
 			
 			//ログイン中のユーザーのsortがdateならば日付順、priorityなら優先度順でタスク表示
@@ -101,7 +103,10 @@ public class TaskTimeController {
 			if(sort.equals("priority")) {
 				task = taskService.selectUndoneTasksByPriority(userID);
 			}
-
+			
+			//sort情報表示用
+			model.addAttribute("sort", sort);
+			
 			//task情報表示用
 			model.addAttribute("task", task);
 			
@@ -112,6 +117,7 @@ public class TaskTimeController {
 			 * 週間見積時間表示処理
 			 */
 			LocalDate today = LocalDate.now();
+			LocalDate tomorrow  = today.plusDays(1);
 
 			LocalDate mon = today.with(DayOfWeek.MONDAY);
 			LocalDate tue = today.with(DayOfWeek.TUESDAY);
@@ -150,9 +156,12 @@ public class TaskTimeController {
 					sun.format(md));
 			model.addAttribute("week", week);
 
-			//今週のタスク状況 「今日」赤字表示用
+			//今週のタスク状況欄 「今日」赤字表示 「明日」太字表示用
 			String todayofweek = today.format(md);
 			model.addAttribute("todayofweek", todayofweek);
+			String tomorrowofweek = tomorrow.format(md);
+			model.addAttribute("tomorrowofweek", tomorrowofweek);
+
 
 			//double型mon~sunEstimatedTimeをListに格納し、modelに渡す
 			List<Double> weekEstimatedTime = Arrays.asList(monEstimatedTime, tueEstimatedTime, wedEstimatedTime, thuEstimatedTime, friEstimatedTime, satEstimatedTime, sunEstimatedTime);
@@ -160,13 +169,13 @@ public class TaskTimeController {
 
 			//タスク一覧 日付欄 今日、明日表示用
 			DateTimeFormatter ymd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			LocalDate tomorrow  = today.plusDays(1);
 			model.addAttribute("today", today.format(ymd));
 			model.addAttribute("tomorrow", tomorrow.format(ymd));
 
 			/**
 			 * 週間見積表示処理終わり
 			 */
+
 
 			return "/app/top.html";
 	}
@@ -187,8 +196,6 @@ public class TaskTimeController {
 		//ログイン中のユーザーのsortをpriorityに変換
 		String sort = "priority";
 		userService.updateUserSort(sort, userID);
-
-		//週間タスク表示ロジックを記載すること
 
 		return "redirect:/app/top";
 	}
@@ -214,7 +221,7 @@ public class TaskTimeController {
 	}
 
 	/**
-	 * GoogleCalendarAPI　テスト
+	 * GoogleCalendarAPI　テスト用
 	 * @param authenticationToken
 	 * @return
 	 * @throws GeneralSecurityException
@@ -429,6 +436,19 @@ public class TaskTimeController {
 		model.addAttribute("task", task);
 
 		return "/app/done.html";
+	}
+
+	@PostMapping("/deleteAll/{userID}")
+	public String deleteAll(@AuthenticationPrincipal OAuth2User oauth2User) {
+
+		//ログイン中のユーザーのメールアドレスをuserIDとして取得
+		String userID = oauth2User.getAttribute("email");
+
+		//ログイン中のユーザーのタスク情報とユーザー情報を削除
+		taskService.deleteAll(userID);
+		userService.deleteAll(userID);
+
+		return "/app/delete_all.html";
 	}
 	
 	

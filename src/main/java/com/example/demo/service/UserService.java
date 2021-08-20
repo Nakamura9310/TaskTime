@@ -29,6 +29,11 @@ public class UserService {
         mapper.updateUserSort(sort, userID);
     }
 
+    //DeleteAll ログイン中のユーザー情報を全削除
+    public void deleteAll(String userID) {
+        mapper.deleteAll(userID);
+    }
+
 
 
 

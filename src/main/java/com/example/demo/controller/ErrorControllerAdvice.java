@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.exception.AccessTokenNullException;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -13,7 +14,8 @@ public class ErrorControllerAdvice {
      * @return
      */
     @ExceptionHandler(AccessTokenNullException.class)
-    public String accessTokenNullError(AccessTokenNullException e) {
+    public String accessTokenNullError(AccessTokenNullException e, Model model) {
+        model.addAttribute("message", e.getMessage());
         return "/error/access_error.html";
     }
 
@@ -23,8 +25,9 @@ public class ErrorControllerAdvice {
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public String otherError(Exception e) {
-        return "/error/error.html";
+    public String otherError(Exception e, Model model) {
+        model.addAttribute("message", e.getMessage());
+        return "/error/basic_error.html";
     }
     
 }

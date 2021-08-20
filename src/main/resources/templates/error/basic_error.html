@@ -21,12 +21,16 @@
 </head>
 
 <body>
-    <div class="container-lg">
 
+    <div class="container-lg">
         <h2 class="p">エラーが発生しました<i class="far fa-dizzy"></i></h2>
 
-        <p class="mt-5 mb-0">アクセストークンが切れています。</p>
-        <p class="mb-0">恐れ入りますが、再ログインしてください。</p>
+        <a th:href="@{/app/top}"><button class="btn btn-outline-primary">Topへ戻る</button></a><br>
+
+        <p class="mt-5 mb-0">
+            Googleカレンダーに予定追加時にこのエラーページが表示される場合は<br>
+            アクセストークンがうまく取得できていない可能性があります。<br>
+            恐れ入りますが再ログインしてください。</p>
         <form th:action="@{/logout}" method="post">
             <input class="btn btn-outline-danger" type="submit" value="ログインに戻る" />
         </form>

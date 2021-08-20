@@ -8,42 +8,56 @@
     <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- MaterialBootstrapCDN(https://mdbootstrap.com/docs/b4/jquery/getting-started/cdn/) -->
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+	<!-- Google Fonts -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+	<!-- Bootstrap core CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Material Design Bootstrap -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
 
 </head>
 
 <body>
     <!-- ナビゲーションバー -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand text-dark" th:href="@{/app/top}">TaskTime</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link" aria-current="page" th:href="@{/app/top}">Top</a>
-                    <a class="nav-link" th:href="@{/app/today}">today</a>
-                    <a class="nav-link active" aria-current="page" th:href="@{/app/done}">done</a>
-                    <form class="nav-link" th:action="@{/logout}" method="post"><input type="submit" value="Logout"
-                            class="btn btn-outline-secondary btn-sm"></form>
-                </div>
-            </div>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-light shadow">
+			<a class="navbar-brand text-dark" th:href="@{/app/top}"><strong>TaskTime</strong></a>
+			<!-- トグルボタン -->
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-        </div>
-    </nav>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link fas fa-home" th:href="@{/app/top}">Top</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link fas fa-book-open" th:href="@{/app/today}">Today</a>
+					</li>
+
+					<li class="nav-item active">
+						<a class="nav-link fas fa-check" th:href="@{/app/done}">Done</a>
+					</li>
+
+				</ul>
+			</div>
+
+		</nav>
+	</header>
 
     <div class="container-lg">
 
         
-        <h5>完了済みタスク一覧</h5>
-        <table class="table table-secondary table-borderd table-striped table-hover table-sm shadow">
-            <thead class="task-table-header">
+        <table class="table table-sm mt-5">
+            <thead>
                 <tr>
-                    <th style="text-align: center;">タスク</th>
+                    <th class="font-weight-bold text-center">完了済みタスク</th>
                     <th style="text-align: center;">見積時間(h)</th>
                     <th style="text-align: center;">完了日</th>
                     <th style="text-align: center;">未完了に戻す</th>
@@ -53,23 +67,24 @@
 
             <tbody th:each="task:${task}" th:object="${task}">
                 <tr>
-                    <td style="text-align: center;" th:text="*{taskName}"></td>
-                    <td style="text-align: center;" th:text="*{estimatedTime}"></td>
-                    <td style="text-align: center;" th:text="*{completionDate}"></td>
+                    <td class="text-center align-middle" th:text="*{taskName}"></td>
+                    <td class="text-center align-middle" th:text="*{estimatedTime}"></td>
+                    <td class="text-center align-middle" th:text="*{completionDate}"></td>
                     <td style="text-align: center;">
                         <form method="POST" th:action="@{/app/undone/{taskID} (taskID=*{taskID}) }">
-                            <button class="btn btn-warning btn-sm">Undone</button>
+                            <button class="btn btn-success btn-sm far fa-check-circle"></button>
                         </form>
                     </td>
                     <td style="text-align: center;">
                         <form method="POST" th:action="@{/app/deleteDone/{taskID} (taskID=*{taskID}) }" onsubmit="return checkDelete()">
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="submit" class="btn btn-dark btn-sm far fa-trash-alt"></button>
                         </form>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
+
 
     <script>
         //Delete時のダイアログ
@@ -82,10 +97,15 @@
 		}
     </script>
 
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-        crossorigin="anonymous"></script>
+    <!-- MaterialBootstrapCDN(https://mdbootstrap.com/docs/b4/jquery/getting-started/cdn/) -->
+	<!-- JQuery -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
 
 
 </body>
