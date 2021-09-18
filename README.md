@@ -1,7 +1,7 @@
 # TaskTime
 TaskTime
 
-アプリケーションURL：https:task-time.net
+アプリケーションURL：https://task-time.net
 
 ご覧いただきありがとうございます。<br>
 Qiitaに当アプリの説明を記載してございますので、ご覧いただけますと幸いです。
