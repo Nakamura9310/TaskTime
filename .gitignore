@@ -37,3 +37,5 @@ out/
 
 ### VS Code ###
 .vscode/
+logs/tasktime.log
+logs/tasktime.log.2021-11-03.0.gz
