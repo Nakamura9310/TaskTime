@@ -20,8 +20,8 @@ spring:
       client:
         registration:
           google:
-            client-id: [client-id]
-            client-secret: [client-secret]
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
             # ↓本番環境(AWS内)ではコメントアウトを外す
             # redirect-uri: "https://task-time.net/login/oauth2/code/google"
             scope:
