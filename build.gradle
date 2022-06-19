@@ -2,16 +2,16 @@ plugins {
 	id 'org.springframework.boot' version '2.5.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'war'
+	// id 'jar'
 }
 
-war {
-	enabled = true
-	archiveName = 'TaskTime.war'
+jar {
+	// enabled = true
+	baseName = 'TaskTime'
 }
 
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+// version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
@@ -56,9 +56,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	//Tomcat用
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	// providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
 }
+
+// heroku用
+defaultTasks "clean", "build"
 
 // test {
 // 	useJUnitPlatform()
