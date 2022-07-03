@@ -1,1 +1,1 @@
-web: java -jar build/libs/TaskTime.jar --server.port=8009
+web: java -jar build/libs/TaskTime.jar --server.port=8080

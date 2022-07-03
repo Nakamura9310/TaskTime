@@ -32,8 +32,8 @@ spring:
 
 #Tomcatのポート番号
 #AWS環境では8080なので以下コメントアウトする
-server:
-    port: 8009
+# server:
+#     port: 8009
 
 #Log Level
 logging:
