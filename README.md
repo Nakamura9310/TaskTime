@@ -4,7 +4,8 @@
 Qiitaに当アプリの説明を記載してございますので、ご覧いただけますと幸いです。<br>
 Qiita URL：https://qiita.com/hhujk5/items/a37cb17041c3e1070ac7
 
-アプリケーションURL：https://task-time.net
+アプリケーションURL：https://tasktime-nk.herokuapp.com/login
+(AWSからherokuへ移行しました)
 
 # 必要な環境変数
 - ${SPRING_DATASOURCE_USERNAME}
