@@ -16,7 +16,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(AccessTokenNullException.class)
     public String accessTokenNullError(AccessTokenNullException e, Model model) {
         model.addAttribute("message", e.getMessage());
-        return "/error/access_error.html";
+        return "error/access_error.html";
     }
 
     /**
@@ -27,7 +27,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(Exception.class)
     public String otherError(Exception e, Model model) {
         model.addAttribute("message", e.getMessage());
-        return "/error/basic_error.html";
+        return "error/basic_error.html";
     }
     
 }
