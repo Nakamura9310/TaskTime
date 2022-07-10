@@ -177,7 +177,7 @@ public class TaskTimeController {
 			 */
 
 
-			return "/app/top.html";
+			return "app/top.html";
 	}
 
 
@@ -268,7 +268,7 @@ public class TaskTimeController {
 		model.addAttribute("email", oauth2User.getAttribute("email"));
 		task.setScheduledDate(LocalDate.now().toString());
 		task.setStartTime("12:00");
-		return "/app/new.html";
+		return "app/new.html";
 	}
 	/**
 	 * 新規タスク登録
@@ -291,7 +291,7 @@ public class TaskTimeController {
 			model.addAttribute("email", oauth2User.getAttribute("email"));
 			task.setScheduledDate(LocalDate.now().toString());
 			task.setStartTime("12:00");
-			return "/app/new.html";
+			return "app/new.html";
 		}
 
 		//新規タスクinsert
@@ -311,7 +311,7 @@ public class TaskTimeController {
 	@GetMapping("/edit/{taskID}")
 	public String displayEdit(Model model, @PathVariable("taskID") int taskID, @ModelAttribute Task task) {
 		model.addAttribute("task", taskService.selectOne(taskID));
-		return "/app/edit.html";
+		return "app/edit.html";
 	}
 	/**
 	 * タスク編集
@@ -327,7 +327,7 @@ public class TaskTimeController {
 			System.err.println("↑↑　エラー発生！BindingResult内容　↑↑");
 
 			model.addAttribute("task", task);
-			return "/app/edit.html";
+			return "app/edit.html";
 		}
 
 		taskService.updateOneTask(task);
@@ -415,7 +415,7 @@ public class TaskTimeController {
 		//GoogleCalendar表示用
 		model.addAttribute("userID", userID);
 
-		return "/app/today.html";
+		return "app/today.html";
 	}
 
 
@@ -435,7 +435,7 @@ public class TaskTimeController {
 		List<Task> task = taskService.selectDoneTasks(userID);
 		model.addAttribute("task", task);
 
-		return "/app/done.html";
+		return "app/done.html";
 	}
 
 	@PostMapping("/deleteAll/{userID}")
@@ -448,7 +448,7 @@ public class TaskTimeController {
 		taskService.deleteAll(userID);
 		userService.deleteAll(userID);
 
-		return "/app/delete_all.html";
+		return "app/delete_all.html";
 	}
 	
 	
